@@ -35,7 +35,10 @@ public:
 
     int add_top(int top) {
         int i = 1;
-        while (adj[0][i] != 0 && i < n + 2) {
+        while (adj[0][i] != 0 && i < n + 2 ) {
+            if (adj[0][i] == top){
+                return 1;
+            }
             i++;
         }
         if (i == n + 2) {
@@ -63,17 +66,50 @@ public:
     }
 
     int add_arc(int top1, int top2){
-       if (Search(top1)==true&& Search(top2)==true) {
-           if (adj[top1][top2] != 1) {
-               adj[top1][top2] = 1;
-           }
-       }
+        int i = 1;
+        int j=1;
+        if(top1==top2){
+            return 1;
+        }
+        while (adj[0][i] != top2 && i < n + 2) {
+            i++;
+        }
+        while (adj[j][0] != top1 && j < n + 2) {
+            j++;
+        }
+        if (i == n + 2) {
+            return 1;
+        }
+        if (j == n + 2) {
+            return 1;
+        }
+        if (adj[j][i] !=1) {
+            adj[j][i] = 1;
+
+        }
+
     }
     int del_arc(int top1, int top2){
-        if (Search(top1)==true&& Search(top2)==true) {
-            if (adj[top1][top2] != 0) {
-                adj[top1][top2] = 0;
-            }
+        int i = 1;
+        int j=1;
+        if(top1==top2){
+            return 1;
+        }
+        while (adj[0][i] != top2 && i < n + 2) {
+            i++;
+        }
+        while (adj[j][0] != top1 && j < n + 2) {
+            j++;
+        }
+        if (i == n + 2) {
+            return 1;
+        }
+        if (j == n + 2) {
+            return 1;
+        }
+        if (adj[j][i] !=0) {
+            adj[j][i] = 0;
+
         }
     }
     /*
@@ -122,29 +158,40 @@ public:
             }
         }
     }*/
+    int BFS(int start){
+        int i=1;
+        AdjacencyMatrix S(n);
+        int q=start;
+        adj[q][q]=1;
+        while (i<=n){
+            i++;
+            S.add_top(i);
+        }
+        for (int j=1;j<=n;j++){
+            if(adj[q][j]==1 && j!=q){
+                S.add_arc(q,j);
+            }
+        }
+
+
+    }
 };
+
 int main()
 {
     AdjacencyMatrix adj(6);
-    adj.add_top(1);
+    adj.add_top(13);
     adj.add_top(2);
-    adj.add_top(3);
-    adj.add_top(4);
+    adj.add_top(8);
+    adj.add_top(1);
+    adj.add_top(9);
     adj.add_top(5);
-    adj.add_top(6);
-    adj.add_arc(1,2);
-    adj.add_arc(1,4);
-    adj.add_arc(2,3);
-    adj.add_arc(2,5);
-    adj.add_arc(2,6);
-    adj.add_arc(3,6);
-    adj.add_arc(4,2);
-    adj.add_arc(4,5);
-    adj.add_arc(5,1);
-    adj.add_arc(5,3);
+    adj.add_arc(13,2);
+    adj.add_arc(9,5);
+    adj.add_arc(9,1);
+    adj.add_arc(1,1);
+    adj.display();
 
-    adj.display();
-    adj.del_arc(5,3);
-    adj.display();
+
     return 0;
 }
