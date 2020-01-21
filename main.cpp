@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstdlib>
-
+#include <vector>
 using namespace std;
 
 class AdjacencyMatrix {
@@ -18,6 +18,7 @@ public:
             }
         }
     }
+
 
     bool Search(int top) {
         int i = 1;
@@ -127,71 +128,92 @@ public:
         }
         cout << endl;
     }
-    /*void BFS(int start)
-    {
-
-        vector<bool> visited(v, false);
-        vector<int> q;
-        q.push_back(start);
-
-        // Set source as visited
-        visited[start] = true;
-
-        int vis;
-        while (!q.empty()) {
-            vis = q[0];
-
-            // Print the current node
-            cout << vis << " ";
-            q.erase(q.begin());
-
-            // For every adjacent vertex to the current vertex
-            for (int i = 0; i < v; i++) {
-                if (adj[vis][i] == 1 && (!visited[i])) {
-
-                    // Push the adjacent node to the queue
-                    q.push_back(i);
-
-                    // Set
-                    visited[i] = true;
-                }
-            }
-        }
-    }*/
     int BFS(int start){
-        int i=1;
+        int e=0;
+        int k=1;
+        int m=0;
         AdjacencyMatrix S(n);
         int q=start;
-        adj[q][q]=1;
-        while (i<=n){
-            i++;
-            S.add_top(i);
-        }
-        for (int j=1;j<=n;j++){
-            if(adj[q][j]==1 && j!=q){
-                S.add_arc(q,j);
-            }
-        }
+        S.add_top(q);
+        int *visited= new int[n];
+        visited[0]=q;//первая помеченная вершина
+        for (int i=1;i<=n+1;i++) {
 
+           for(int j=1;j <= n+1;j++) {//заполняем строку массива
+               if ((adj[q][j] == 1)||(adj[visited[k]][j] == 1)) {
+                   S.add_top(j);
+                   S.add_arc(q, j);//заполняем все дуги текущей помеченной вершины
+                   m++;
+               }
+               if(m==1){//добавляем помеченные вершины в массив
+                   while(visited[k]!=0 && k<n+2){
+                       if (visited[k]==adj[0][j]){
+                           e++;
+                       }
+                       k++;
+                   }
+                   if(e==0){
+                       visited[k]=adj[0][j];
+                       S.del_arc(q, adj[0][j]);//удаляем дугу
+                       q=adj[0][j];
+                       cout<<q<<endl;
+                   }else{
+                       S.del_arc(q, j);//удаляем дугу
+                       m=0;
+                   }
+               }
+           }
+
+
+       }
+        S.display();
+        for(int p=0;p<=n;p++){
+            cout<<visited[p]<< " ";
+        }
 
     }
+
+    /*int BFS(int start){
+        AdjacencyMatrix S(n);
+        int q=start;
+        int *visited=new int[n];
+        visited[0]=q;
+        S.add_top(start);
+        for (int i=0; i<=n+1;n++){
+            for(int j=1; j<n+1; n++){
+                if(adj[i][j]==1){
+                    S.add_top(adj[0][j]);
+                    S.add_arc(i,adj[0][j]);
+                }
+
+            }
+        }
+        S.display();//сука даже это нахуй не работает
+    }*/
+
 };
 
 int main()
 {
     AdjacencyMatrix adj(6);
-    adj.add_top(13);
-    adj.add_top(2);
-    adj.add_top(8);
     adj.add_top(1);
-    adj.add_top(9);
+    adj.add_top(2);
+    adj.add_top(3);
+    adj.add_top(4);
     adj.add_top(5);
-    adj.add_arc(13,2);
-    adj.add_arc(9,5);
-    adj.add_arc(9,1);
-    adj.add_arc(1,1);
+    adj.add_top(6);
+    adj.add_arc(1,3);
+    adj.add_arc(1,2);
+    adj.add_arc(2,3);
+    adj.add_arc(2,5);
+    adj.add_arc(3,5);
+    adj.add_arc(3,6);
+    adj.add_arc(4,3);
+    adj.add_arc(5,1);
+    adj.add_arc(5,4);
+    adj.add_arc(6,5);
     adj.display();
-
+adj.BFS(1);
 
     return 0;
 }
